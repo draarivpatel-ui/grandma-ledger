@@ -81,3 +81,9 @@ Checked 2026-10-25 from a real browser page on the live address, not localhost:
 - `https://aariv.me/grandma-ledger/` first answered 404 for about 40 seconds while the first build ran, then returned HTTP 200. All 18 files in the saved list (and `sw.js`) each return 200 there.
 - On the live page, all four rules passed (654 parts of the page, 17 own files read). The saved copy kept 18 of 18 files, its scope is the `/grandma-ledger/` folder, and the page reported that a copy is saved on the device.
 - Commits are by `draarivpatel-ui` with the `noreply` address. The Hark audit showed 0 violations before each push.
+
+## Review on 2026-10-25 (afternoon)
+
+- In Playwright's Chromium 148 the page's own check said "Not yet" at commits `f1e4dc5`, `4755993` and `21d8a7e` (the last one live on aariv.me). Tables, their row groups and rows got a gray border color from the browser's built-in styles. The border is never drawn, but the two crayon check counted it as a third color. Chrome 155 does not set that gray, which is why the earlier check in a real Chrome passed. WebKit's built-in styles also give tables a gray border color, so Safari on a phone would probably have said "Not yet" too (not tested, no WebKit here). `styles.css` now sets those borders to the ink, and a smoke test guards it.
+- The page footer now says the four demands were picked by us from Grandma's examples, that Grandma did not hand them out, and that the book is not an entry and earns no cookies. Before this, only this file and the README said so.
+- `BOOK_VERSION` moved to `two-crayon-v2` so devices with the old saved copy fetch the new files.

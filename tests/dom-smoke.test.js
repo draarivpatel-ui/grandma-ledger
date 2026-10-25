@@ -33,6 +33,17 @@ const idsIn = (text) => [...text.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 
 /* ---------- the page markup ---------- */
 
+test('tables never keep the device default gray border, which the two crayon check reads as a third color', () => {
+  // Chromium 148 (and WebKit's default styles) give table, thead, tbody and tr a gray
+  // border-color. The live check on aariv.me said "Not yet" in that Chromium until this rule existed.
+  assert.match(styles, /table,\s*thead,\s*tbody,\s*tfoot,\s*tr\s*\{\s*border-color:\s*currentColor;\s*\}/);
+});
+
+test('the page itself says the four demands were picked by us and that it is not an entry', () => {
+  assert.match(html, /Grandma did not hand them out/);
+  assert.match(html, /not an entry in Help Grandma Out/);
+});
+
 test('the page has a doctype, a language, a title and a viewport', () => {
   assert.match(html, /^<!doctype html>/i);
   assert.match(html, /<html lang="en">/);
