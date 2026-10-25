@@ -1,0 +1,13 @@
+{
+  "name": "grandma-ledger",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Two-Crayon Kitchen & Bill Book. A recipe scaler, grocery splitter and weekly care card in two colors, offline, with no libraries and no jargon.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/",
+    "serve": "python3 -m http.server 8080"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

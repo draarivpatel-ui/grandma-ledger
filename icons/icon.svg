@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Two-Crayon Kitchen and Bill Book">
+  <rect width="512" height="512" fill="#142850"/>
+  <rect x="28" y="28" width="456" height="456" fill="none" stroke="#FAF5E8" stroke-width="8"/>
+  <rect x="40" y="40" width="432" height="432" fill="none" stroke="#FAF5E8" stroke-width="3"/>
+  <path d="M256 150 C206 124 140 122 92 142 V372 C140 352 206 354 256 380 Z" fill="#FAF5E8"/>
+  <path d="M256 150 C306 124 372 122 420 142 V372 C372 352 306 354 256 380 Z" fill="#FAF5E8"/>
+  <path d="M256 150 V380" stroke="#142850" stroke-width="8" fill="none"/>
+  <g stroke="#142850" stroke-width="9" fill="none" stroke-linecap="square">
+    <path d="M130 200 C170 190 210 192 230 204"/>
+    <path d="M130 244 C170 234 210 236 230 248"/>
+    <path d="M130 288 C170 278 210 280 230 292"/>
+    <path d="M282 204 C302 192 342 190 382 200"/>
+    <path d="M282 248 C302 236 342 234 382 244"/>
+  </g>
+  <circle cx="332" cy="298" r="22" fill="none" stroke="#142850" stroke-width="9"/>
+</svg>

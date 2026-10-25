@@ -1,0 +1,65 @@
+/* Two-Crayon Kitchen & Bill Book: tokens.
+   This is the only file allowed to write a color. There are two crayons:
+   warm cream paper and deep Prussian ink. Every shade below is ink or paper
+   thinned with alpha, never a third color. Everything else uses var(--name). */
+:root {
+  --paper: #FAF5E8;
+  --ink: #142850;
+
+  --ink-90: rgba(20, 40, 80, 0.9);
+  --ink-75: rgba(20, 40, 80, 0.75);
+  --ink-60: rgba(20, 40, 80, 0.6);
+  --ink-40: rgba(20, 40, 80, 0.4);
+  --ink-25: rgba(20, 40, 80, 0.25);
+  --ink-14: rgba(20, 40, 80, 0.14);
+  --ink-07: rgba(20, 40, 80, 0.07);
+  --paper-90: rgba(250, 245, 232, 0.9);
+  --paper-70: rgba(250, 245, 232, 0.7);
+  --paper-30: rgba(250, 245, 232, 0.3);
+  --paper-14: rgba(250, 245, 232, 0.14);
+
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 0.875rem;
+  --text-sm: 1rem;
+  --text-base: 1.125rem;
+  --text-lead: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --text-h3: clamp(1.45rem, 1.3rem + 0.5vw, 1.75rem);
+  --text-h2: clamp(2.3rem, 1.5rem + 3.3vw, 4.25rem);
+  --text-display: clamp(3.2rem, 1.3rem + 8.4vw, 7.8rem);
+
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6.5rem;
+
+  --rule-thin: 1px;
+  --rule: 2px;
+  --rule-heavy: 4px;
+  --radius: 2px;
+  --press: 4px;
+
+  --page: 76rem;
+  --measure: 38rem;
+  --target: 2.9rem;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.5, 0, 0.9, 0.4);
+  --ease-in-out: cubic-bezier(0.6, 0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur: 220ms;
+  --dur-slow: 480ms;
+  --dur-drift: 18s;
+
+  --dots: radial-gradient(circle at center, var(--ink-40) 0.9px, transparent 1.3px);
+  --dots-soft: radial-gradient(circle at center, var(--ink-25) 0.8px, transparent 1.2px);
+  --dots-paper: radial-gradient(circle at center, var(--paper-30) 0.9px, transparent 1.3px);
+  --hatch: repeating-linear-gradient(45deg, var(--ink-40) 0, var(--ink-40) 1px, transparent 1px, transparent 6px);
+  --leader: radial-gradient(circle at center, var(--ink-60) 1px, transparent 1.4px);
+}

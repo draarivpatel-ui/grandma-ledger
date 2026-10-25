@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="only light">
+  <meta name="theme-color" content="#142850">
+  <title>Two-Crayon Kitchen &amp; Bill Book</title>
+  <meta name="description" content="Scale a family recipe, split the grocery slip down to the penny, and keep the week's medicine and plants on one printable card. Two colors, works without internet, nothing borrowed, plain English.">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="preload" href="./fonts/fraunces-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./fonts/plus-jakarta-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="./fonts/jetbrains-mono-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="./tokens.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-spoon" viewBox="0 0 24 24"><circle cx="8" cy="8" r="4.5"></circle><path d="M11.5 11.5L20 20"></path></symbol>
+    <symbol id="i-pill" viewBox="0 0 24 24"><path d="M8.5 16.5l8-8a3.6 3.6 0 0 0-5.1-5.1l-8 8a3.6 3.6 0 0 0 5.1 5.1z"></path><path d="M8 7.5l4.5 4.5"></path></symbol>
+    <symbol id="i-leaf" viewBox="0 0 24 24"><path d="M5 19C5 10 10 5 19 5c0 9-5 14-14 14z"></path><path d="M5 19c3-5.5 6-8.5 10-10.5"></path></symbol>
+    <symbol id="i-jar" viewBox="0 0 24 24"><path d="M6 3h12v3H6z"></path><path d="M7 6v15h10V6"></path><path d="M7 12h10"></path></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 6.5v11"></path><path d="M15 9.5c0-1.2-1.3-2-3-2s-3 .8-3 2 1.3 1.7 3 2 3 .8 3 2-1.3 2-3 2-3-.8-3-2"></path></symbol>
+    <symbol id="i-print" viewBox="0 0 24 24"><path d="M7 9V3h10v6"></path><path d="M4 9h16v8H4z"></path><path d="M7 14h10v7H7z"></path></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"></path></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"></path></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 4v16M4 12h16"></path></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"></path><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"></path></symbol>
+    <symbol id="i-pan" viewBox="0 0 24 24"><path d="M3 8h18v10H3z"></path><path d="M3 12h18"></path></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"></path></symbol>
+  </svg>
+
+  <a class="skip no-print" href="#kitchen">Skip to the recipe scaler</a>
+
+  <header class="masthead">
+    <a class="wordmark" href="#top"><span class="wordmark-main">Two-Crayon</span> <span class="wordmark-sub">Kitchen &amp; Bill Book</span></a>
+    <p class="saved" id="saved-note" role="status">A copy of this book is being saved on your device.</p>
+    <button type="button" class="btn small no-print" id="print-button">
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-print"></use></svg>
+      <span class="btn-text">Keep a copy on paper</span>
+    </button>
+  </header>
+
+  <nav class="tabs no-print" aria-label="Parts of the book">
+    <a href="#kitchen" data-tab="kitchen">Kitchen</a>
+    <a href="#bills" data-tab="bills">Bill book</a>
+    <a href="#care" data-tab="care">Care card</a>
+    <a href="#check" data-tab="check">Check</a>
+  </nav>
+
+  <main id="top">
+    <section class="hero no-print" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title">A family book, kept in two crayons.</h1>
+        <p class="lead">Scale the recipe for the whole table, split the grocery slip down to the penny, and keep the week's medicine and plants on one card. It prints on plain paper and needs no internet.</p>
+        <p class="hero-actions">
+          <a class="btn primary" href="#kitchen">Scale a recipe</a>
+          <a class="btn" href="#bills">Split a bill</a>
+        </p>
+        <p class="promise">Made to follow four of Grandma's demands. Two colors. Works without internet. Nothing borrowed. Plain English.</p>
+      </div>
+
+      <aside class="hero-page" aria-labelledby="hero-card-title">
+        <div class="hero-page-inner">
+          <h2 id="hero-card-title">Sample page, banana bread</h2>
+          <p class="hero-sub">Made for 4, now cooking for 6. Every amount times 1 1/2.</p>
+          <ul class="slip" id="hero-slip">
+            <li class="slip-row"><span class="amount"><span class="about">about</span> 2 2/3 cups</span><span class="what">all-purpose flour</span><span class="exact">exactly 2 5/8 cups</span></li>
+            <li class="slip-row"><span class="amount">1 cup</span><span class="what">brown sugar</span></li>
+            <li class="slip-row"><span class="amount">3/4 cup</span><span class="what">butter, melted</span></li>
+            <li class="slip-row"><span class="amount">3</span><span class="what">eggs</span></li>
+            <li class="slip-row"><span class="amount">4 1/2</span><span class="what">ripe bananas</span></li>
+            <li class="slip-row"><span class="amount">1 1/2 tsp</span><span class="what">baking soda</span></li>
+          </ul>
+          <p class="hero-foot">No 0.3333 cups anywhere in this book.</p>
+        </div>
+        <div class="stamp stamp-small" id="hero-stamp" data-state="wait" aria-live="polite">
+          <span class="stamp-title">Checking</span>
+          <span class="stamp-sub">the four rules</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="part kitchen" id="kitchen" aria-labelledby="kitchen-title">
+      <div class="part-head">
+        <h2 id="kitchen-title">Scale the family recipe</h2>
+        <p class="part-intro">Type one ingredient on each line. Say how many people it was made for and how many you are cooking for. Every amount comes back in real kitchen fractions.</p>
+      </div>
+
+      <div class="kitchen-grid">
+        <form class="panel no-print" id="recipe-form" aria-label="The recipe">
+          <div class="field">
+            <label for="recipe-text">The recipe, one ingredient on each line</label>
+            <textarea id="recipe-text" rows="10" spellcheck="false"></textarea>
+            <p class="problem" id="recipe-problems" role="alert"></p>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="servings-from">Made for (people)</label>
+              <input id="servings-from" type="number" inputmode="numeric" min="1" max="200" step="1">
+            </div>
+            <div class="field">
+              <label for="servings-to">Cooking for (people)</label>
+              <input id="servings-to" type="number" inputmode="numeric" min="1" max="200" step="1">
+            </div>
+          </div>
+          <fieldset class="field choice">
+            <legend>Work out the amounts from</legend>
+            <label class="radio"><input type="radio" name="scale-by" value="people" id="by-people"><span>The number of people</span></label>
+            <label class="radio"><input type="radio" name="scale-by" value="pan" id="by-pan"><span>The size of the pan, below</span></label>
+          </fieldset>
+        </form>
+
+        <div class="result" aria-live="polite">
+          <h3 id="slip-title">Your new amounts</h3>
+          <p class="readout" id="scale-readout"></p>
+          <ul class="slip" id="ingredient-list"></ul>
+          <p class="fine">Amounts marked "about" were rounded to a measure a cook can really pour. The exact amount is printed under them.</p>
+        </div>
+      </div>
+
+      <div class="pan-band" id="pans">
+        <div class="pan-head">
+          <h3>Same batter, different pan</h3>
+          <p>Say which pan the recipe was written for and which pan you have. Measure both the same way, in inches or in centimeters.</p>
+        </div>
+        <div class="pan-controls no-print">
+          <fieldset class="panel pan-set">
+            <legend>The recipe was written for</legend>
+            <div class="field">
+              <label for="pf-shape">Shape</label>
+              <select id="pf-shape"><option value="rect">Rectangle or square</option><option value="round">Round</option></select>
+            </div>
+            <div class="field-row" data-shape-for="pf" data-shape="round">
+              <div class="field"><label for="pf-size">Across</label><input id="pf-size" type="text" inputmode="decimal" autocomplete="off"></div>
+            </div>
+            <div class="field-row" data-shape-for="pf" data-shape="rect">
+              <div class="field"><label for="pf-width">Long side</label><input id="pf-width" type="text" inputmode="decimal" autocomplete="off"></div>
+              <div class="field"><label for="pf-height">Short side</label><input id="pf-height" type="text" inputmode="decimal" autocomplete="off"></div>
+            </div>
+          </fieldset>
+          <fieldset class="panel pan-set">
+            <legend>You are baking in</legend>
+            <div class="field">
+              <label for="pt-shape">Shape</label>
+              <select id="pt-shape"><option value="rect">Rectangle or square</option><option value="round">Round</option></select>
+            </div>
+            <div class="field-row" data-shape-for="pt" data-shape="round">
+              <div class="field"><label for="pt-size">Across</label><input id="pt-size" type="text" inputmode="decimal" autocomplete="off"></div>
+            </div>
+            <div class="field-row" data-shape-for="pt" data-shape="rect">
+              <div class="field"><label for="pt-width">Long side</label><input id="pt-width" type="text" inputmode="decimal" autocomplete="off"></div>
+              <div class="field"><label for="pt-height">Short side</label><input id="pt-height" type="text" inputmode="decimal" autocomplete="off"></div>
+            </div>
+          </fieldset>
+        </div>
+        <p class="problem" id="pan-problems" role="alert"></p>
+        <div class="pan-figure" id="pan-figure"></div>
+        <div class="pan-advice" aria-live="polite">
+          <p id="pan-advice-scaled"></p>
+          <p id="pan-advice-unscaled"></p>
+          <p class="fine">These are rules of thumb from how batter spreads, not a promise. Your oven has the last word.</p>
+          <button type="button" class="btn" id="use-pan-scale">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-arrow"></use></svg>
+            <span class="btn-text">Use this scale for the recipe above</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="part bills" id="bills" aria-labelledby="bills-title">
+      <div class="part-head">
+        <h2 id="bills-title">Split the grocery slip</h2>
+        <p class="part-intro">List who is in the house, then add each slip with who paid and who shared it. The book finds the fewest handoffs that leave everyone square, down to the penny.</p>
+      </div>
+
+      <div class="bills-grid no-print">
+        <form class="panel" id="bill-form" aria-label="Add a slip">
+          <div class="field">
+            <label for="people-input">Who is in the house (separate names with commas)</label>
+            <input id="people-input" type="text" autocomplete="off">
+            <p class="problem" id="people-problems" role="alert"></p>
+          </div>
+          <div class="field">
+            <label for="exp-label">What was it for</label>
+            <input id="exp-label" type="text" autocomplete="off" placeholder="Saturday groceries">
+          </div>
+          <div class="field-row">
+            <div class="field"><label for="exp-payer">Who paid</label><select id="exp-payer"></select></div>
+            <div class="field"><label for="exp-amount">How much</label><input id="exp-amount" type="text" inputmode="decimal" autocomplete="off" placeholder="42.17"></div>
+          </div>
+          <fieldset class="field choice" id="exp-sharers"><legend>Shared by</legend></fieldset>
+          <p class="problem" id="slip-problems" role="alert"></p>
+          <button type="submit" class="btn primary" id="add-slip">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+            <span class="btn-text">Add this slip</span>
+          </button>
+        </form>
+
+        <div class="result">
+          <h3>Slips so far</h3>
+          <ul class="care-items" id="expense-list"></ul>
+        </div>
+      </div>
+
+      <div class="settle" aria-live="polite">
+        <div class="settle-figure" id="settle-figure"></div>
+        <div class="settle-text">
+          <h3>Who hands what to whom</h3>
+          <ul class="handoffs" id="settle-list"></ul>
+          <div class="ledger-wrap" id="ledger" role="region" aria-label="The ledger table" tabindex="0"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="part care" id="care" aria-labelledby="care-title">
+      <div class="part-head">
+        <h2 id="care-title">Keep the week on one card</h2>
+        <p class="part-intro">Add each medicine, plant or pantry shelf. The card shows what is due each morning, noon and evening, with a box to tick. Print it and stick it on the fridge.</p>
+      </div>
+
+      <div class="care-grid no-print">
+        <form class="panel" id="care-form" aria-label="Add to the card">
+          <div class="field-row">
+            <div class="field"><label for="care-name">Name</label><input id="care-name" type="text" autocomplete="off" placeholder="Vitamin D"></div>
+            <div class="field">
+              <label for="care-kind">What is it</label>
+              <select id="care-kind"><option value="medicine">Medicine</option><option value="plant">Plant</option><option value="pantry">Pantry shelf</option></select>
+            </div>
+          </div>
+          <div class="field" data-kind-show="medicine">
+            <label for="care-dose">How much (optional)</label>
+            <input id="care-dose" type="text" autocomplete="off" placeholder="1 tablet">
+          </div>
+          <fieldset class="field choice" data-kind-show="medicine plant">
+            <legend>Time of day</legend>
+            <label class="tick"><input type="checkbox" name="care-slot" value="morning" checked><span>Morning</span></label>
+            <label class="tick"><input type="checkbox" name="care-slot" value="noon"><span>Noon</span></label>
+            <label class="tick"><input type="checkbox" name="care-slot" value="evening"><span>Evening</span></label>
+          </fieldset>
+          <div class="field" data-kind-show="plant">
+            <label for="care-every">How often to water</label>
+            <select id="care-every">
+              <option value="1">Every day</option><option value="2">Every 2 days</option><option value="3" selected>Every 3 days</option>
+              <option value="4">Every 4 days</option><option value="7">Once a week</option>
+            </select>
+          </div>
+          <p class="fine" data-kind-show="pantry">Pantry shelves go on the Sunday check, when you turn the oldest tins and jars to the front.</p>
+          <p class="problem" id="care-problems" role="alert"></p>
+          <button type="submit" class="btn primary">
+            <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-plus"></use></svg>
+            <span class="btn-text">Add to the card</span>
+          </button>
+        </form>
+        <div class="result">
+          <h3>On the card</h3>
+          <ul class="care-items" id="care-items"></ul>
+          <p class="fine">This card is a reminder sheet. It does not replace what your doctor or pharmacist told you.</p>
+        </div>
+      </div>
+
+      <div class="care-sheet">
+        <h3 class="care-sheet-title">The week at a glance</h3>
+        <p class="problem" id="care-conflicts" role="alert"></p>
+        <div class="care-cards" id="care-card"></div>
+      </div>
+    </section>
+
+    <section class="part check no-print" id="check" aria-labelledby="check-title">
+      <div class="check-inner">
+        <div class="part-head">
+          <h2 id="check-title">Check that this book keeps its promises</h2>
+          <p class="part-intro">The book reads its own pages and runs the same four checks the tests run. Nothing here is taken on trust.</p>
+        </div>
+        <div class="check-grid">
+          <ul class="audit" id="audit-list" aria-live="polite"></ul>
+          <div class="stamp-wrap">
+            <div class="stamp" id="stamp" data-state="wait" aria-live="polite">
+              <span class="stamp-title">Checking</span>
+              <span class="stamp-sub">the four rules</span>
+            </div>
+            <p class="fine" id="check-note"></p>
+            <div class="check-actions">
+              <button type="button" class="btn inverse" id="check-again">Check again</button>
+              <button type="button" class="btn inverse" id="copy-link">
+                <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-link"></use></svg>
+                <span class="btn-text">Copy a link to this page as it is now</span>
+              </button>
+            </div>
+            <p class="fine" id="link-note" role="status"></p>
+            <label class="linkbox" for="link-box">A link that opens this book with your recipe, slips and card</label>
+            <input id="link-box" type="text" readonly>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="colophon">
+    <p class="colophon-main">Two-Crayon Kitchen &amp; Bill Book. Built to follow four of Grandma's demands from Hack Club's Help Grandma Out.</p>
+    <p>Set in Fraunces, Plus Jakarta Sans and JetBrains Mono, each kept inside this book under the Open Font License. Written with help from an AI assistant and checked by tests. Your recipes, slips and card stay on your own device.</p>
+    <p class="print-note" id="print-note"></p>
+  </footer>
+
+  <noscript><p class="no-script">This book does its sums with a small helper that your device has switched off. Switch it back on and open the page again.</p></noscript>
+
+  <script src="./files.js"></script>
+  <script src="./js/engine.js"></script>
+  <script src="./share.js"></script>
+  <script src="./render.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
