@@ -72,3 +72,12 @@ Not verified:
 - Try installing it on a phone and printing the care card on real paper.
 - Add more kinds of pans or metric measures.
 - Decide whether to keep this repo public given the eligibility note above (it is useful as open source either way).
+
+## Push and web address
+
+Checked 2026-10-25 from a real browser page on the live address, not localhost:
+
+- Repository: https://github.com/draarivpatel-ui/grandma-ledger (public, MIT). GitHub Pages is on `main`, folder `/`, build status `built`.
+- `https://aariv.me/grandma-ledger/` first answered 404 for about 40 seconds while the first build ran, then returned HTTP 200. All 18 files in the saved list (and `sw.js`) each return 200 there.
+- On the live page, all four rules passed (654 parts of the page, 17 own files read). The saved copy kept 18 of 18 files, its scope is the `/grandma-ledger/` folder, and the page reported that a copy is saved on the device.
+- Commits are by `draarivpatel-ui` with the `noreply` address. The Hark audit showed 0 violations before each push.
