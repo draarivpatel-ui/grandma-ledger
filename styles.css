@@ -395,7 +395,7 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
 .btn.primary { background-color: var(--ink); color: var(--paper); box-shadow: var(--press) var(--press) 0 var(--ink-40); }
 .btn.primary:hover { background-color: var(--ink-90); box-shadow: 2px 2px 0 var(--ink-40); }
 .btn.primary:active { box-shadow: 0 0 0 var(--ink-40); }
-.btn.small { min-height: 2.5rem; padding: 0.3rem 0.85rem; font-size: var(--text-sm); box-shadow: 3px 3px 0 var(--ink); }
+.btn.small { min-height: var(--target); padding: 0.3rem 0.85rem; font-size: var(--text-sm); box-shadow: 3px 3px 0 var(--ink); }
 .btn.small:hover { box-shadow: 1px 1px 0 var(--ink); translate: 2px 2px; }
 .btn.small:active { box-shadow: 0 0 0 var(--ink); translate: 3px 3px; }
 .btn.inverse { background-color: transparent; color: var(--paper); border-color: var(--paper); box-shadow: var(--press) var(--press) 0 var(--paper-30); }
@@ -546,6 +546,7 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
 .linkbox { margin-top: var(--space-sm); }
 .check input[type="text"] { background-color: var(--ink); color: var(--paper); border-color: var(--paper); }
 .check input[type="text"]:hover { background-color: var(--paper-14); }
+.check input[type="text"]::placeholder { color: var(--paper-70); }
 .check-actions { display: flex; flex-wrap: wrap; gap: var(--space-sm) var(--space-md); }
 
 .stamp {
@@ -652,6 +653,11 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
   .hero-page .stamp-small { right: var(--space-xs); width: 7.5rem; }
   .hero-foot { max-width: 52%; }
   .pan-band { padding: var(--space-sm); }
+  .pan-figure { padding: var(--space-3xs); }
+  .pan-figure .fig-label { font-size: 22px; }
+  .pan-figure .fig-value { font-size: 27px; }
+  .settle-figure .fig-name { font-size: 25px; }
+  .settle-figure .fig-net { font-size: 21px; }
   .panel { padding: var(--space-sm); }
   .care-item { grid-template-columns: auto minmax(0, 1fr); }
   .care-item .btn { grid-column: 1 / -1; justify-self: start; }

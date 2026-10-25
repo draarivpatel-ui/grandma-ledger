@@ -57,7 +57,7 @@
     /* Two pans drawn to the same scale, then the batter seen from the side. */
     function panFigure(fromPan, toPan, plan, idPrefix) {
       var p = idPrefix || 'pan';
-      var scale = 190 / Math.max(longest(fromPan), longest(toPan));
+      var scale = 170 / Math.max(longest(fromPan), longest(toPan));
       var depth = Math.min(E.frNum(plan.depthWithoutScaling), 1.6);
       var wall = 34;
       var batter = Math.max(4, wall * Math.min(1, depth));
@@ -83,8 +83,8 @@
       return '<svg class="figure" viewBox="0 0 480 350" role="img" aria-label="' + esc(label) + '">' +
         '<defs><pattern id="' + p + '-hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
         '<line x1="0" y1="0" x2="0" y2="7" class="hatch-line"></line></pattern></defs>' +
-        '<g fill="url(#' + p + '-hatch)">' + panShape(fromPan, left, 128, scale, 'fig-pan') +
-        panShape(toPan, right, 128, scale, 'fig-pan') + '</g>' +
+        '<g fill="url(#' + p + '-hatch)">' + panShape(fromPan, left, 138, scale, 'fig-pan') +
+        panShape(toPan, right, 138, scale, 'fig-pan') + '</g>' +
         words(left, 20, 'Written for', 'this pan') +
         words(right, 20, 'You are baking', 'in this pan') +
         '<text class="fig-value" x="' + left + '" y="248" text-anchor="middle">' + esc(panSize(fromPan)) + '</text>' +
@@ -142,8 +142,8 @@
         var net = row.netCents === 0 ? 'square' : (row.netCents > 0 ? 'gets ' : 'gives ') + E.formatCents(Math.abs(row.netCents));
         var shortName = row.name.length > 12 ? row.name.slice(0, 11) + '.' : row.name;
         var above = count > 1 && s.y < 180;
-        var nameY = above ? s.y - radius - 24 : s.y + radius + 18;
-        var netY = above ? s.y - radius - 6 : s.y + radius + 36;
+        var nameY = above ? s.y - radius - 30 : s.y + radius + 26;
+        var netY = above ? s.y - radius - 8 : s.y + radius + 48;
         return '<circle class="fig-node" cx="' + s.x.toFixed(1) + '" cy="' + s.y.toFixed(1) + '" r="' + radius + '"></circle>' +
           '<text class="fig-initial" x="' + s.x.toFixed(1) + '" y="' + (s.y + 9).toFixed(1) + '" text-anchor="middle">' +
           esc(row.name.charAt(0).toUpperCase()) + '</text>' +
