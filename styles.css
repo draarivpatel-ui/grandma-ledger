@@ -495,8 +495,8 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
 .handoff-pieces { font-size: var(--text-sm); color: var(--ink-75); }
 
 .ledger-wrap { overflow-x: auto; }
-/* Chromium before about version 150 and WebKit give tables a gray border color in their own
-   default styles. The border is never drawn, but the two-crayon check reads it as a third color. */
+/* Some browsers (Chromium 148 among them) give tables a gray border color in their own default
+   styles. The border is never drawn, but the two-crayon check reads it as a third color. */
 table, thead, tbody, tfoot, tr { border-color: currentColor; }
 .ledger { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: var(--text-sm); }
 .ledger caption { padding-bottom: var(--space-xs); text-align: left; font-family: var(--font-body); font-weight: 700; }

@@ -34,7 +34,7 @@ const idsIn = (text) => [...text.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]);
 /* ---------- the page markup ---------- */
 
 test('tables never keep the device default gray border, which the two crayon check reads as a third color', () => {
-  // Chromium 148 (and WebKit's default styles) give table, thead, tbody and tr a gray
+  // Chromium 148's default styles give table, thead, tbody and tr a gray
   // border-color. The live check on aariv.me said "Not yet" in that Chromium until this rule existed.
   assert.match(styles, /table,\s*thead,\s*tbody,\s*tfoot,\s*tr\s*\{\s*border-color:\s*currentColor;\s*\}/);
 });
