@@ -200,7 +200,7 @@ main { display: block; }
   color: var(--ink-75);
 }
 
-.hero-page { position: relative; rotate: 1.2deg; }
+.hero-page { position: relative; rotate: 1.2deg; margin-bottom: 5rem; }
 .hero-page-inner {
   position: relative;
   overflow: hidden;
@@ -233,7 +233,7 @@ main { display: block; }
   background-color: var(--paper);
 }
 .hero-sub { margin-top: var(--space-xs); font-weight: 650; }
-.hero-foot { margin-top: var(--space-sm); font-size: var(--text-sm); color: var(--ink-75); }
+.hero-foot { margin-top: var(--space-sm); max-width: 58%; font-size: var(--text-sm); color: var(--ink-75); }
 .hero-page .slip { margin-top: var(--space-sm); }
 
 @keyframes drift {
@@ -570,7 +570,7 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
 .stamp-small {
   position: absolute;
   right: 0.75rem;
-  top: -4.4rem;
+  bottom: -5rem;
   width: 8.6rem;
   padding: var(--space-xs);
   border-width: 5px;
@@ -606,7 +606,7 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
 @media (max-width: 64rem) {
   .hero, .kitchen-grid, .bills-grid, .settle, .care-grid, .check-grid, .part-head { grid-template-columns: minmax(0, 1fr); }
   .hero { gap: var(--space-xl); }
-  .hero-page { rotate: 0.6deg; margin: var(--space-lg) var(--space-lg) 0 0; }
+  .hero-page { rotate: 0.6deg; margin: 0 var(--space-lg) 5rem 0; }
   .part-head { gap: var(--space-sm); margin-bottom: var(--space-lg); }
 }
 
@@ -648,7 +648,9 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
   .hero { padding-top: var(--space-lg); padding-bottom: var(--space-lg); }
   .part { padding-top: var(--space-xl); padding-bottom: var(--space-xl); }
   .hero-page { margin-right: 0; }
-  .stamp-small { right: var(--space-xs); top: -4rem; }
+  .stamp-small .stamp-title { font-size: 1.15rem; }
+  .hero-page .stamp-small { right: var(--space-xs); width: 7.5rem; }
+  .hero-foot { max-width: 52%; }
   .pan-band { padding: var(--space-sm); }
   .panel { padding: var(--space-sm); }
   .care-item { grid-template-columns: auto minmax(0, 1fr); }

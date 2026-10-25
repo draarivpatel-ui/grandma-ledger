@@ -1,6 +1,6 @@
-# Notes for Billy and Aariv: Two-Crayon Kitchen & Bill Book (grandma-ledger)
+# Notes: Two-Crayon Kitchen & Bill Book (grandma-ledger)
 
-Written 2026-10-25 (clock: `date` said Sun Oct 25 2026, 12:56 CDT). Read this before submitting anything to Hack Club.
+Written 2026-10-25 (clock: `date` said Sun Oct 25 2026, 12:56 CDT). Read this before entering anything in Hack Club's Help Grandma Out.
 
 ## The one thing to decide first: this is not eligible for cookies as it stands
 
@@ -14,12 +14,12 @@ Read live from https://grandma.hackclub.com/ on 2026-10-25 (the home page and it
 What that means for this repo:
 
 1. It was written almost entirely by an AI assistant in one sitting. That is far over the 30% AI limit.
-2. It was created before Aariv asked Grandma for a demand, and before any Hackatime hours. The program says the project has to start after the ask.
+2. It was created before anyone asked Grandma for a demand, and before any Hackatime hours. The program says the project has to start after the ask.
 3. The four demands (Two Colors, Offline, No Jargon, No Libraries) are ones I picked from her examples. Grandma assigns the real ones.
 
 So treat it as a portfolio and open-source project that follows the spirit of four of her demands. Do not put it into the Pantry as a normal entry without asking the organizers (the program's Slack channel is `#grandma`). I did not contact anyone, sign in anywhere, or submit anything.
 
-If Aariv wants cookies, the honest path is a new project, started after asking Grandma, with the hours logged and the code mostly his own. This repo could be a reference for that, not the entry.
+If the goal is cookies, the honest path is a new project, started after asking Grandma, with the hours logged and the code mostly the entrant's own. This repo could be a reference for that, not the entry.
 
 ## What was built and what was checked
 
@@ -28,7 +28,7 @@ Everything below was run in this session. Counts come from the tools, not from m
 | Check | Result |
 | --- | --- |
 | `npm test` | 141 pass, 0 fail (89 engine, 52 page smoke) |
-| Hark audit (`--audit`) | see the end of this file, filled in after the final run |
+| Hark audit (`--audit`) | 0 violations in 16 files |
 | Planted defects, count 25 | 25 of 25 caught |
 | Planted defects, count 400 (all 96 that exist in `js/engine.js`) | 96 of 96 caught |
 | Live page check in a real Chrome page (`http://127.0.0.1:8321/`) | all four rules passed: 654 parts of the page, 17 own files read, 18 files saved on the device by the saved copy |
@@ -38,7 +38,7 @@ Everything below was run in this session. Counts come from the tools, not from m
 
 Not verified:
 
-- The live site at https://aariv.me/grandma-ledger/ (see the end of this file for the result of the push and the web address check).
+- The live site result is recorded in the section "Push and web address" at the end of this file.
 - Installing the book to a home screen (the manifest and PNG icons exist; nobody tried installing).
 - Any other browser than Chrome. The brief asked for animation checks in a focused real browser. The only animation is the stamp pressing down and a slow dot drift on the sample page. I checked screenshots, not frame rates.
 - Screen reader behavior. Labels, landmarks and focus rings are in place and tested as text, but nobody listened to it.

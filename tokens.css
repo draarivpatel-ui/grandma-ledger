@@ -28,7 +28,7 @@
   --text-lead: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
   --text-h3: clamp(1.45rem, 1.3rem + 0.5vw, 1.75rem);
   --text-h2: clamp(2.3rem, 1.5rem + 3.3vw, 4.25rem);
-  --text-display: clamp(3.2rem, 1.3rem + 8.4vw, 7.8rem);
+  --text-display: clamp(3.2rem, 1.3rem + 7.6vw, 6.9rem);
 
   --space-3xs: 0.25rem;
   --space-2xs: 0.5rem;
