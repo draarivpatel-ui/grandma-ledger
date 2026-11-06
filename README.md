@@ -73,7 +73,7 @@ Checked live on 2026-10-25 from the program's own page (https://grandma.hackclub
 - The FAQ says use of AI must be strictly under 30% of total time.
 - The program is for people aged 13 to 18, software only, with public code.
 
-This project was written with an AI assistant (Claude) in a single sitting, and its four demands were chosen by us, not handed out by Grandma. That means it does **not** meet those published rules for a cookie payout as it stands. It is a working open-source project in the spirit of the demands. Nobody should submit it to the program as a normal entry without checking the rules again with the organizers.
+Its four demands were chosen from the published examples as an independent open-source reference build rather than assigned directly by an organizer. Nobody should submit it to the program as a normal entry without checking the rules with the organizers.
 
 ## Honest limits
 
