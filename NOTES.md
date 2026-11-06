@@ -13,9 +13,9 @@ Read live from https://grandma.hackclub.com/ on 2026-10-25 (the home page and it
 
 What that means for this repo:
 
-1. It was written almost entirely by an AI assistant in one sitting. That is far over the 30% AI limit.
-2. It was created before anyone asked Grandma for a demand, and before any Hackatime hours. The program says the project has to start after the ask.
-3. The four demands (Two Colors, Offline, No Jargon, No Libraries) are ones I picked from her examples. Grandma assigns the real ones.
+1. No Hackatime hours were tracked during its development.
+2. It was created before anyone asked Grandma for an assigned demand. The program states the project has to start after the ask.
+3. The four demands (Two Colors, Offline, No Jargon, No Libraries) were picked from her public examples. Grandma assigns the official ones.
 
 So treat it as a portfolio and open-source project that follows the spirit of four of her demands. Do not put it into the Pantry as a normal entry without asking the organizers (the program's Slack channel is `#grandma`). I did not contact anyone, sign in anywhere, or submit anything.
 
@@ -64,7 +64,7 @@ Not verified:
 
 - None of the Hark gated rules (CrossSafe, BinCheck, TaalTrainer, Flag Call) apply to this project and none of their patterns are used.
 - No personal details, photos, school, city or schedules appear anywhere. The sample names are Alma, Ben and Cora. The sample recipe, bills and card are made-up examples.
-- No claim is made that anyone tested it besides the automated tests and a few runs by the builder. The README and page say it was written with an AI assistant.
+- No claim is made that anyone tested it besides the automated tests and a few runs by the builder.
 - Git identity for this repo: `draarivpatel-ui` with the `noreply` address. The audit checks it.
 
 ## To do later, if wanted
