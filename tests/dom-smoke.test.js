@@ -40,8 +40,8 @@ test('tables never keep the device default gray border, which the two crayon che
 });
 
 test('the page itself says the four demands were picked by us and that it is not an entry', () => {
-  assert.match(html, /Grandma did not hand them out/);
-  assert.match(html, /not an entry in Help Grandma Out/);
+  assert.match(html, /We picked these four from her examples/);
+  assert.match(html, /not a Help Grandma Out payout submission/);
 });
 
 test('the page has a doctype, a language, a title and a viewport', () => {
@@ -266,7 +266,7 @@ test('package.json lists no libraries of any kind', () => {
   assert.deepEqual(pkg.dependencies, {});
   assert.deepEqual(pkg.devDependencies, {});
   assert.equal(pkg.license, 'MIT');
-  assert.equal(pkg.scripts.test, 'node --test tests/');
+  assert.equal(pkg.scripts.test, 'node --test');
   assert.equal(fs.existsSync(path.join(ROOT, 'node_modules')), false);
   assert.equal(fs.existsSync(path.join(ROOT, 'package-lock.json')), false);
 });
