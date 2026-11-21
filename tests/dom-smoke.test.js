@@ -703,3 +703,54 @@ test('the print button asks for paper and the printed note says when', async () 
   page.get('print-button').fire('click');
   assert.equal(written.printed, true);
 });
+
+test('nothing in the book scrolls smoothly, so pages never glide past the reader or the recorder', () => {
+  assert.equal(/scroll-behavior\s*:/i.test(styles + '\n' + tokens + '\n' + html), false);
+  assert.equal(/behavior\s*:\s*['"]smooth['"]/.test(appSource + '\n' + read('render.js') + '\n' + read('share.js')), false);
+});
+
+test('an ingredient too big to keep exact is explained, not silently wrong', async () => {
+  const { page } = await boot();
+  const box = page.get('recipe-text');
+  box.value = '99999999999999999999 cups flour\n2 eggs';
+  box.fire('input');
+  assert.match(page.get('recipe-problems').textContent, /too big/);
+  assert.match(page.get('ingredient-list').innerHTML, /eggs/);
+});
+
+test('a scale that overflows exact math is explained, never uncaught', async () => {
+  const { page } = await boot();
+  const box = page.get('recipe-text');
+  box.value = '999999999999999 cups flour';
+  box.fire('input');
+  const to = page.get('servings-to');
+  to.value = '999999999';
+  to.fire('input');
+  assert.match(page.get('recipe-problems').textContent, /too big/);
+  assert.equal(page.get('ingredient-list').innerHTML, '');
+});
+
+test('a broken squeezed link cannot stop the book from opening', async () => {
+  const S = require('../share.js');
+  assert.equal(await S.unpack('z1.!!!!', E), null);
+  assert.equal(await S.unpack('#z1.!!!!', E), null);
+  const { page } = await boot({ location: { hash: '#z1.!!!!', href: 'http://book.test/index.html', protocol: 'http:' } });
+  assert.match(page.get('ingredient-list').innerHTML, /all-purpose flour/);
+});
+
+test('people in the house never trip the plain-words check', async () => {
+  const kept = [];
+  const files = (() => { const s = { self: {} }; vm.runInNewContext(read('files.js'), s); return s.self.BOOK_FILES; })();
+  files.forEach((f) => kept.push(f));
+  const { page } = await boot({
+    caches: { open: () => Promise.resolve({ keys: () => Promise.resolve(kept) }) },
+    navigator: { onLine: false, serviceWorker: { register: () => Promise.resolve(), ready: Promise.resolve() } }
+  });
+  const p = page.get('people-input');
+  p.value = 'Bug, Alma, Cora';
+  p.fire('input');
+  page.get('check-again').fire('click');
+  await new Promise((r) => setTimeout(r, 20));
+  const states = [...page.get('audit-list').innerHTML.matchAll(/data-state="(yes|no|wait)"/g)].map((m) => m[1]);
+  assert.deepEqual(states, ['yes', 'yes', 'yes', 'yes']);
+});

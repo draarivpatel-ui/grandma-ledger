@@ -818,3 +818,34 @@ test('the public list of hard words is not empty and has no duplicates', () => {
   assert.deepEqual(E.DAY_NAMES.length, 7);
   assert.deepEqual(E.SLOTS, ['morning', 'noon', 'evening']);
 });
+
+test('amounts too big to keep exact are refused, never silently wrong', () => {
+  assert.throws(() => E.fr(1e20), /too big to keep exact/);
+  assert.throws(() => E.frMul(E.fr(1e10), E.fr(1e10)), /too big to keep exact/);
+  assert.throws(() => E.parseQuantity('99999999999999999999'), /too big to keep exact/);
+  assert.throws(() => E.parseIngredientLine('99999999999999999999 cups flour'), /too big/);
+  const parsed = E.parseRecipeText('2 cups flour\n99999999999999999999 cups sugar');
+  assert.equal(parsed.items.length, 1);
+  assert.equal(parsed.problems.length, 1);
+});
+
+test('a slip of .50 and a trailing dot still read, but an absurd amount is refused', () => {
+  assert.equal(E.parseMoneyToCents('.50'), 50);
+  assert.equal(E.parseMoneyToCents('.5'), 50);
+  assert.equal(E.parseMoneyToCents('12.'), 1200);
+  assert.throws(() => E.parseMoneyToCents(''), /could not read that money/);
+  assert.throws(() => E.parseMoneyToCents('.'), /could not read that money/);
+  assert.throws(() => E.parseMoneyToCents('99999999999999999999'), /too big/);
+  const result = E.settleHouseholdBills({ people: ['A', 'B'], expenses: [{ payer: 'A', amount: '.50' }] });
+  assert.equal(result.totalCents, 50);
+});
+
+test('a household total too big to keep exact is refused, never silently off', () => {
+  assert.throws(() => E.settleHouseholdBills({ people: ['A', 'B'], expenses: [{ payer: 'A', cents: 1e20, sharedBy: ['A', 'B'] }] }), /too big/);
+  const big = '90071992547409.91';
+  assert.throws(() => E.settleHouseholdBills({ people: ['A', 'B'], expenses: [
+    { payer: 'A', amount: big, sharedBy: ['A', 'B'] },
+    { payer: 'A', amount: big, sharedBy: ['A', 'B'] },
+    { payer: 'A', amount: big, sharedBy: ['A', 'B'] }
+  ] }), /household total is too big/);
+});

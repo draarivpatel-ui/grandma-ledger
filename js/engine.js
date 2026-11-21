@@ -34,6 +34,9 @@
     if (!Number.isInteger(n) || !Number.isInteger(d)) {
       throw new Error('A fraction needs whole numbers on the top and the bottom.');
     }
+    if (!Number.isSafeInteger(n) || !Number.isSafeInteger(d)) {
+      throw new Error('That amount is too big to keep exact.');
+    }
     if (d === 0) throw new Error('A fraction cannot have zero on the bottom.');
     if (d < 0) {
       n = -n;
@@ -393,9 +396,13 @@
 
   function parseMoneyToCents(input) {
     var s = String(input).trim().replace(/^\$/, '').replace(/,/g, '');
-    var m = /^(\d+)(?:\.(\d{1,2}))?$/.exec(s);
-    if (!m) throw new Error('I could not read that money amount: ' + String(input).slice(0, 20));
-    return Number(m[1]) * 100 + (m[2] ? Number((m[2] + '0').slice(0, 2)) : 0);
+    var m = /^(\d*)(?:\.(\d{0,2}))?$/.exec(s);
+    if (!m || (m[1] === '' && !m[2])) {
+      throw new Error('I could not read that money amount: ' + String(input).slice(0, 20));
+    }
+    var cents = Number(m[1] || '0') * 100 + (m[2] ? Number((m[2] + '0').slice(0, 2)) : 0);
+    if (!Number.isSafeInteger(cents)) throw new Error('That money amount is too big for this book.');
+    return cents;
   }
 
   function formatCents(cents) {
@@ -533,6 +540,9 @@
       if (!Number.isInteger(cents) || cents <= 0) {
         throw new Error('Every bill needs an amount bigger than nothing.');
       }
+      if (!Number.isSafeInteger(cents)) {
+        throw new Error('That money amount is too big for this book.');
+      }
       var payer = String(expense.payer).trim();
       if (!known.has(payer)) throw new Error('Nobody named ' + payer + ' is on the list.');
       var sharers = expense.sharedBy && expense.sharedBy.length > 0 ? expense.sharedBy : people;
@@ -543,6 +553,9 @@
         seen.add(name);
       });
       var shares = splitCents(cents, sharers.length, index % sharers.length);
+      if (!Number.isSafeInteger(totalCents + cents)) {
+        throw new Error('The household total is too big for this book.');
+      }
       paid.set(payer, paid.get(payer) + cents);
       sharers.forEach(function (name, k) {
         owed.set(name, owed.get(name) + shares[k]);

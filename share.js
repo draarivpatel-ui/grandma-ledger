@@ -58,7 +58,9 @@
     var s = String(text).replace(/^#/, '');
     if (s.slice(0, 3) !== 'z1.') return Promise.resolve(engine.unpackState(s));
     if (!canSqueeze()) return Promise.resolve(null);
-    return runStream(scope.DecompressionStream, base64UrlToBytes(s.slice(3))).then(function (bytes) {
+    return Promise.resolve().then(function () {
+      return runStream(scope.DecompressionStream, base64UrlToBytes(s.slice(3)));
+    }).then(function (bytes) {
       var value = JSON.parse(new TextDecoder().decode(bytes));
       return value !== null && typeof value === 'object' ? value : null;
     }).catch(function () {

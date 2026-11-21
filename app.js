@@ -121,8 +121,11 @@
     var why = '';
     var message = '';
     if (parsed.problems.length > 0) {
-      message = 'Line ' + parsed.problems[0].line + ' needs an amount at the start, like "2 cups flour". ' +
-        (parsed.problems.length > 1 ? (parsed.problems.length - 1) + ' more lines need the same.' : '');
+      var first = parsed.problems[0];
+      message = /too big/.test(first.message)
+        ? 'Line ' + first.line + ' is too big to keep exact. '
+        : 'Line ' + first.line + ' needs an amount at the start, like "2 cups flour". ';
+      if (parsed.problems.length > 1) message += (parsed.problems.length - 1) + ' more lines need the same.';
     }
     try {
       if (state.scaleBy === 'pan') {
@@ -143,8 +146,17 @@
       text(readout, parsed.items.length === 0 ? 'Add an ingredient to begin.' : '');
       return;
     }
+    var scaled;
+    try {
+      scaled = E.scaleRecipeIngredients(parsed.items, factor);
+    } catch (err) {
+      list.innerHTML = '';
+      text(readout, '');
+      text(problems, err.message);
+      return;
+    }
     text(readout, 'Everything times ' + E.formatMixed(factor) + ', ' + why + '.');
-    list.innerHTML = R.ingredientList(E.scaleRecipeIngredients(parsed.items, factor));
+    list.innerHTML = R.ingredientList(scaled);
   }
 
   function syncPanFields() {
@@ -409,7 +421,7 @@
       rows[2].detail = rows[2].ok
         ? 'No libraries are listed or loaded. Read ' + files.length + ' of this book\'s own files to be sure.'
         : (unread.length > 0 ? unread.length + ' files could not be read, so this could not be proven.' : 'A library was found.');
-      var jargon = E.findJargon(E.visibleText(document.body.innerHTML));
+      var jargon = E.findJargon(E.visibleText(by['./index.html'] || ''));
       rows[3].ok = rows[3].ok && jargon.length === 0;
       rows[3].detail = rows[3].ok
         ? 'No hard computer words on the page. A word list cannot judge plain speaking, only catch the usual suspects.'
@@ -593,6 +605,8 @@
     if (window.location.hash.length > 4) {
       S.unpack(window.location.hash, E).then(function (shared) {
         if (shared) adopt(shared);
+        begin();
+      }).catch(function () {
         begin();
       });
     } else {

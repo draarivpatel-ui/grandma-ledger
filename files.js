@@ -3,7 +3,7 @@
    so they can never disagree. Bump BOOK_VERSION whenever any file changes. */
 (function (root) {
   'use strict';
-  root.BOOK_VERSION = 'two-crayon-v2';
+  root.BOOK_VERSION = 'two-crayon-v3';
   root.BOOK_FILES = [
     './',
     './index.html',
