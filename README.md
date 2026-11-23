@@ -22,7 +22,10 @@ It was built to follow four of the demands on Hack Club's Help Grandma Out (http
 - **Split the grocery slip.** Whole cents only. Shares always add back to the total, and the leftover cents rotate between people. The book finds the fewest handoffs. For up to 14 people who owe or are owed, it is exact: it finds the largest number of groups that settle inside themselves. Beyond that it falls back to a largest-first plan. It names the bills and coins for each handoff.
 - **Keep the week on one card.** Morning, noon, evening and a Sunday check, with a box to tick, repeats caught and named, and a print layout.
 - **Check that this book keeps its promises.** The page reads its own files, runs the same four checks as the tests, and stamps the result.
-- **Keep a copy.** Print, or copy a link that carries the whole book in its tail (squeezed with the device's own tools when available).
+- **Compare on the checkup bench.** Six everyday batch and pan moves worked out by the book's own sums, a line of every common pan against batter depth, and the book's fewest handoffs set against the plain greedy way for houses of 3 to 12 people. Pick a row, a pan or a column and the book uses it right away.
+- **Stamp and keep the numbers.** The book writes its numbers one careful way and stamps them once with a hand-written SHA-256, so the on-page line, the numbers file, the sheet file and the note all carry the same stamp. Move one penny and the stamp changes.
+- **Let the book check itself.** Twenty-two live checks run in the page: the exact sums, the cup and spoon swaps, whole eggs, every penny accounted for, the stamp answers, the link tail, and all four demands.
+- **Keep a copy.** Print, or copy a link that carries the whole book in its tail (squeezed with the device's own tools when available), with the checkup bench riding along on the end.
 
 The math lives in `js/engine.js`, which runs both in the page and in Node, so the same code is tested and shipped.
 
@@ -42,7 +45,7 @@ then open http://127.0.0.1:8080/. Open it once while connected so the saved copy
 npm test
 ```
 
-This uses only Node's built-in test runner. There are 151 tests: 92 for the engine and 59 smoke tests for the page. The smoke tests include a small stand-in page that runs `app.js` end to end, because a browser library would break the no libraries rule.
+This uses only Node's built-in test runner. There are 495 tests: 92 for the engine, 60 smoke tests for the page, and 343 for the checkup bench (the stamp writer checked against the device's own answers for every message length from 0 to 160 bytes, the careful writer, the bench rows, the link tail, and the wiring). The smoke tests include a small stand-in page that runs `app.js` end to end, because a browser library would break the no libraries rule.
 
 The Hark planted-defect check mutates `js/engine.js` and expects the tests to catch every change. Run against all 96 possible changes, all 96 are caught.
 
@@ -53,6 +56,7 @@ index.html       the page
 tokens.css       the two crayons and every shade (the only file that writes a color)
 styles.css       the look, using tokens only
 js/engine.js     all the math and the four demand checks
+js/book-lab.js   the checkup bench: the stamp writer, the comparisons, the copies, the link tail and the book's own checks
 render.js        turns answers into pieces of page and the two diagrams
 app.js           reads the boxes, shows the answers
 share.js         turns the book into a short piece of link text and back

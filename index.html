@@ -51,6 +51,7 @@
     <a href="#kitchen" data-tab="kitchen">Kitchen</a>
     <a href="#bills" data-tab="bills">Bill book</a>
     <a href="#care" data-tab="care">Care card</a>
+    <a href="#checkup" data-tab="checkup">Checkup</a>
     <a href="#check" data-tab="check">Check</a>
   </nav>
 
@@ -272,6 +273,76 @@
       </div>
     </section>
 
+    <section class="part bench no-print" id="checkup" aria-labelledby="checkup-title">
+      <div class="part-head">
+        <h2 id="checkup-title">Kitchen &amp; slip checkup</h2>
+        <p class="part-intro">Compare pans and splits on one bench, stamp the book's numbers so a copied file can be checked later, and run the same checks the book runs on itself.</p>
+      </div>
+
+      <div class="bench-grid">
+        <div class="bench-block">
+          <h3>Compare pans and batch sizes</h3>
+          <p>Six everyday moves, worked out with the book's own sums. Pick a row and the book uses it right away.</p>
+          <div class="bench-table-wrap" role="region" aria-label="Batch and pan compare table" tabindex="0">
+            <table class="bench-table">
+              <caption>Batch sizes and pan swaps compared</caption>
+              <thead><tr><th scope="col">Try</th><th scope="col">Times the recipe</th><th scope="col">Batter depth</th><th scope="col">Rounded</th><th scope="col">Worst drift</th></tr></thead>
+              <tbody id="bench-rows"></tbody>
+            </table>
+          </div>
+          <p class="fine" id="bench-row-note" role="status"></p>
+        </div>
+
+        <div class="bench-block">
+          <h3>The same batter in every pan</h3>
+          <p>Each mark is a pan, lined up by the room it offers. The higher the mark, the deeper the same batch sits. Pick one and the book swaps to that pan.</p>
+          <div class="chart-frame" id="pan-curve"></div>
+          <p class="fine" id="pan-detail" role="status"></p>
+        </div>
+
+        <div class="bench-block">
+          <h3>Fewest handoffs, and the plain way</h3>
+          <p>One bar pair per house size, from 3 to 12 people. Solid is the book's fewest handoffs; hatched is the plain greedy way. Pick a column for the count.</p>
+          <div class="split-pick" id="split-pick" role="group" aria-label="Pick a kind of week">
+            <button type="button" class="btn small" data-pattern="everyday">Week of shared slips</button>
+            <button type="button" class="btn small" data-pattern="pairs">Slips shared by pairs</button>
+            <button type="button" class="btn small" data-pattern="turns">Taking turns paying</button>
+          </div>
+          <div class="chart-frame" id="split-bars"></div>
+          <p class="fine" id="split-detail" role="status"></p>
+        </div>
+
+        <div class="bench-block">
+          <h3>Stamp and keep the numbers</h3>
+          <p>The book writes its numbers one careful way and stamps them. The line, the files and the note all carry the same stamp. Move one penny and the stamp changes.</p>
+          <p class="bench-stamp" id="stamp-line" aria-live="polite">Stamp ...</p>
+          <p class="fine" id="stamp-detail" role="status"></p>
+          <div class="bench-actions">
+            <button type="button" class="btn" id="stamp-check">Check the stamp</button>
+            <button type="button" class="btn" id="stamp-tamper">Change one penny to test</button>
+            <button type="button" class="btn" id="save-numbers">Save a numbers file</button>
+            <button type="button" class="btn" id="save-sheet">Save a spreadsheet</button>
+            <button type="button" class="btn" id="save-notes">Save a note</button>
+            <button type="button" class="btn" id="bench-link">
+              <svg class="icon" aria-hidden="true" focusable="false"><use href="#i-link"></use></svg>
+              <span class="btn-text">Copy a link to this bench</span>
+            </button>
+          </div>
+          <p class="fine" id="bench-note" role="status"></p>
+        </div>
+
+        <div class="bench-block bench-wide">
+          <h3>The book checks itself</h3>
+          <p>These are the same sums as the tests, run right here in the page.</p>
+          <div class="bench-actions">
+            <button type="button" class="btn primary" id="self-run">Run all book checks</button>
+          </div>
+          <p class="fine" id="self-count" aria-live="polite"></p>
+          <ul class="self-list" id="self-list" aria-live="polite"></ul>
+        </div>
+      </div>
+    </section>
+
     <section class="part check no-print" id="check" aria-labelledby="check-title">
       <div class="check-inner">
         <div class="part-head">
@@ -315,6 +386,7 @@
   <script src="./js/engine.js"></script>
   <script src="./share.js"></script>
   <script src="./render.js"></script>
+  <script src="./js/book-lab.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

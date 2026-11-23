@@ -129,7 +129,7 @@ test('the page uses no inline event code and no inline style colors', () => {
 
 test('the scripts load in the order they need each other', () => {
   const order = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
-  assert.deepEqual(order, ['./files.js', './js/engine.js', './share.js', './render.js', './app.js']);
+  assert.deepEqual(order, ['./files.js', './js/engine.js', './share.js', './render.js', './js/book-lab.js', './app.js']);
 });
 
 /* ---------- the two crayons ---------- */
@@ -181,6 +181,24 @@ test('headings are always upright and nothing is shouted in capitals', () => {
   assert.equal(/font-style\s*:\s*italic/i.test(styles), false);
   assert.equal(/text-transform\s*:\s*uppercase/i.test(styles), false);
   assert.equal(/<(em|i)\b/.test(html), false);
+});
+
+test('no transition or animation ever changes a color, so a mid-blend pixel can never be a third crayon', () => {
+  // Shadows move and grow in transitions, but their color is always ink, so they are allowed here.
+  const colorish = /^(color|background|background-color|background-image|border(-[a-z]+)?(-color)?|outline-color|text-decoration-color|fill|stroke|caret-color|accent-color|column-rule-color)$/i;
+  const bad = [];
+  [...styles.matchAll(/transition\s*:\s*([^;}]+)/g)].forEach((m) => {
+    m[1].split(',').forEach((part) => {
+      const prop = part.trim().split(/\s+/)[0];
+      if (colorish.test(prop)) bad.push('transition on ' + prop);
+    });
+  });
+  [...styles.matchAll(/@keyframes\s+[\w-]+\s*\{([\s\S]*?)\}\s*\}/g)].forEach((m) => {
+    [...m[1].matchAll(/[a-z-]+\s*(?=:)/g)].forEach((p) => {
+      if (colorish.test(p[0])) bad.push('keyframe ' + p[0]);
+    });
+  });
+  assert.deepEqual(bad, []);
 });
 
 test('the check, the stamp and the cursor stay in the two crayons', () => {
@@ -273,7 +291,7 @@ test('package.json lists no libraries of any kind', () => {
 
 test('the page passes all four of Grandma\'s demands, read from the real files', () => {
   const scripts = {};
-  ['app.js', 'render.js', 'share.js', 'sw.js', 'files.js', 'js/engine.js'].forEach((f) => { scripts[f] = read(f); });
+  ['app.js', 'render.js', 'share.js', 'sw.js', 'files.js', 'js/engine.js', 'js/book-lab.js'].forEach((f) => { scripts[f] = read(f); });
   const result = E.auditGrandmaDemands({ html, css: tokens + '\n' + styles, scripts, packageJson: read('package.json') });
   result.checks.forEach((c) => assert.equal(c.ok, true, c.label + ' ' + JSON.stringify(c.offenders)));
   assert.equal(result.ok, true);

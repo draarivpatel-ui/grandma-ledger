@@ -7,6 +7,7 @@
   var E = window.GrandmaEngine;
   var S = window.GrandmaShare;
   var R = window.GrandmaRender.create(E);
+  var L = window.GrandmaBookLab ? window.GrandmaBookLab.create(E) : null;
   var KEY = 'two-crayon-book-v1';
 
   var DEFAULTS = {
@@ -36,6 +37,8 @@
 
   var state = clone(DEFAULTS);
   var lastPlan = null;
+  var bench = { pan: 'none', pattern: 'everyday', row: 'none', size: 0, tamper: false };
+  var lastEnv = null;
 
   function clone(x) { return JSON.parse(JSON.stringify(x)); }
   function $(id) { return document.getElementById(id); }
@@ -327,6 +330,364 @@
     }
   }
 
+  /* ---------- the checkup bench ---------- */
+
+  function esc(v) { return R.esc(v); }
+
+  function fillPanFields(prefix, pan) {
+    $(prefix + '-shape').value = pan.shape;
+    $(prefix + '-size').value = pan.size;
+    $(prefix + '-width').value = pan.width;
+    $(prefix + '-height').value = pan.height;
+  }
+
+  function wholePan(pan, fallback) {
+    var base = clone(fallback);
+    if (pan && (pan.shape === 'round' || pan.shape === 'rect')) base.shape = pan.shape;
+    if (pan) ['size', 'width', 'height'].forEach(function (k) {
+      if (pan[k] !== undefined && pan[k] !== '') base[k] = String(pan[k]).slice(0, 12);
+    });
+    return base;
+  }
+
+  /* Writes the bench state on the end of the link, keeping any share tail. */
+  function updateTail() {
+    if (!L) return;
+    var parts = window.location.hash.replace(/^#/, '').split('&').filter(function (p) {
+      return p !== '' && p.indexOf('checkup=') !== 0;
+    });
+    parts.push(L.encodeTail(bench));
+    var next = window.location.pathname + window.location.search + '#' + parts.join('&');
+    try {
+      if (window.history && window.history.replaceState) window.history.replaceState(null, '', next);
+    } catch (err) { /* an odd address is fine */ }
+  }
+
+  function benchTableRows(rows) {
+    return rows.map(function (row) {
+      var picked = bench.row === row.key ? ' data-picked="yes"' : '';
+      return '<tr data-bench-row="' + esc(row.key) + '"' + picked + ' tabindex="0">' +
+        '<th scope="row"><button type="button" class="row-pick" data-apply="' + esc(row.key) + '">' + esc(row.label) + '</button></th>' +
+        '<td>' + esc(row.factorText) + ' times</td><td>' + esc(row.depthText) + '</td><td>' + esc(row.roundedText) + '</td><td>' + esc(row.driftText) + '</td></tr>';
+    }).join('');
+  }
+
+  /* The same batch in every common pan: room along the bottom, depth up the side. */
+  function panCurveSvg(rows, pickedKey) {
+    var W = 640;
+    var H = 300;
+    var left = 54;
+    var right = 16;
+    var top = 30;
+    var bottom = 58;
+    var areas = rows.map(function (p) { return p.area; });
+    var depths = rows.map(function (p) { return p.depthNum; });
+    var aMin = Math.min.apply(null, areas);
+    var aMax = Math.max.apply(null, areas);
+    var dMin = Math.min.apply(null, depths.concat([1]));
+    var dMax = Math.max.apply(null, depths.concat([1]));
+    var aPad = (aMax - aMin) * 0.08;
+    var dPad = (dMax - dMin) * 0.12;
+    aMin -= aPad;
+    aMax += aPad;
+    dMin = Math.max(0, dMin - dPad);
+    dMax += dPad;
+    function X(a) { return left + (W - left - right) * (a - aMin) / (aMax - aMin); }
+    function Y(d) { return H - bottom - (H - top - bottom) * (d - dMin) / (dMax - dMin); }
+    var y1 = Y(1);
+    var points = rows.map(function (p) { return X(p.area).toFixed(1) + ',' + Y(p.depthNum).toFixed(1); }).join(' ');
+    var labels = rows.map(function (p, i) {
+      var x = X(p.area);
+      var y = i % 2 === 0 ? Y(p.depthNum) - 16 : Y(p.depthNum) + 30;
+      if (y > H - bottom - 4) y = Y(p.depthNum) - 16;
+      return '<text class="chart-label" x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" text-anchor="middle">' + esc(p.label) + '</text>';
+    }).join('');
+    var dots = rows.map(function (p) {
+      var x = X(p.area).toFixed(1);
+      var y = Y(p.depthNum).toFixed(1);
+      var picked = pickedKey === p.key ? ' data-picked="yes"' : '';
+      return '<g class="chart-pick" tabindex="0" role="button" data-pan="' + esc(p.key) + '"' + picked +
+        ' aria-label="Use the ' + esc(p.label) + ' pan"><circle class="chart-hit" cx="' + x + '" cy="' + y + '" r="20"></circle>' +
+        '<circle class="chart-dot" cx="' + x + '" cy="' + y + '" r="7"></circle></g>';
+    }).join('');
+    var label = 'Line of pan room against batter depth for the same batch. ' + rows.map(function (p) {
+      return p.label + ' gives ' + p.depthText;
+    }).join('. ') + '.';
+    return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + '">' +
+      '<line class="chart-axis" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + (H - bottom) + '"></line>' +
+      '<line class="chart-axis" x1="' + left + '" y1="' + (H - bottom) + '" x2="' + (W - right) + '" y2="' + (H - bottom) + '"></line>' +
+      '<line class="chart-grid" x1="' + left + '" y1="' + y1.toFixed(1) + '" x2="' + (W - right) + '" y2="' + y1.toFixed(1) + '"></line>' +
+      '<text class="chart-label" x="8" y="' + (top + 4) + '">deep</text>' +
+      '<text class="chart-label" x="' + (W - right) + '" y="' + (H - bottom - 8) + '" text-anchor="end">roomy pan</text>' +
+      '<text class="chart-value" x="' + (left - 8) + '" y="' + (y1 + 4).toFixed(1) + '" text-anchor="end">same</text>' +
+      '<polyline class="chart-line" points="' + points + '"></polyline>' + labels + dots + '</svg>';
+  }
+
+  /* Fewest handoffs against the plain greedy way, house sizes 3 to 12. */
+  function splitBarsSvg(rows, pickedSize) {
+    var W = 640;
+    var H = 300;
+    var left = 34;
+    var right = 10;
+    var top = 30;
+    var bottom = 44;
+    var max = Math.max.apply(null, rows.map(function (r) { return r.greedy; }).concat([1]));
+    var span = (W - left - right) / rows.length;
+    var barW = Math.min(20, span / 2 - 4);
+    function barTop(v) { return H - bottom - (H - top - bottom) * v / max; }
+    var base = H - bottom;
+    var parts = '';
+    rows.forEach(function (row, i) {
+      var cx = left + span * i + span / 2;
+      var ex = cx - barW / 2 - 1;
+      var gx = cx + barW / 2 + 1;
+      var ey = barTop(row.exact);
+      var gy = barTop(row.greedy);
+      var picked = pickedSize === row.people ? ' data-picked="yes"' : '';
+      parts += '<text class="chart-value" x="' + ex + '" y="' + (ey - 4).toFixed(1) + '" text-anchor="middle">' + row.exact + '</text>' +
+        '<rect class="chart-bar" x="' + (ex - barW / 2).toFixed(1) + '" y="' + ey.toFixed(1) + '" width="' + barW + '" height="' + (base - ey).toFixed(1) + '"></rect>' +
+        '<text class="chart-value" x="' + gx + '" y="' + (gy - 4).toFixed(1) + '" text-anchor="middle">' + row.greedy + '</text>' +
+        '<rect class="chart-bar-alt" fill="url(#bench-hatch)" x="' + (gx - barW / 2).toFixed(1) + '" y="' + gy.toFixed(1) + '" width="' + barW + '" height="' + (base - gy).toFixed(1) + '"></rect>' +
+        (row.saved > 0 ? '<text class="chart-label" x="' + cx + '" y="' + (top - 8) + '" text-anchor="middle">saves ' + row.saved + '</text>' : '') +
+        '<circle class="chart-col-mark" cx="' + cx + '" cy="' + (base + 16) + '" r="2.5"></circle>' +
+        '<text class="chart-label" x="' + cx + '" y="' + (base + 34) + '" text-anchor="middle">' + row.people + '</text>' +
+        '<g class="chart-col" tabindex="0" role="button" data-size="' + row.people + '"' + picked +
+        ' aria-label="House of ' + row.people + ' people"><rect class="chart-hit" x="' + (cx - span / 2).toFixed(1) +
+        '" y="' + top + '" width="' + span.toFixed(1) + '" height="' + (base - top).toFixed(1) + '"></rect></g>';
+    });
+    var label = 'Bars for houses of 3 to 12 people. Solid is the book fewest, hatched is the plain greedy way. ' +
+      rows.map(function (r) { return r.people + ' people: ' + r.exact + ' against ' + r.greedy; }).join('. ') + '.';
+    return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + '">' +
+      '<defs><pattern id="bench-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
+      '<line x1="0" y1="0" x2="0" y2="6" class="chart-bar-fill"></line></pattern></defs>' +
+      '<line class="chart-axis" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + base + '"></line>' +
+      '<line class="chart-axis" x1="' + left + '" y1="' + base + '" x2="' + (W - right) + '" y2="' + base + '"></line>' +
+      '<text class="chart-label" x="2" y="' + (top - 8) + '">hands</text>' +
+      '<text class="chart-label" x="' + (W - right) + '" y="' + (base + 34) + '" text-anchor="end">people</text>' +
+      parts + '</svg>';
+  }
+
+  function currentEntry() {
+    var payload = L.bookPayload(state, bench);
+    var entry = L.stamped(payload);
+    return { payload: payload, entry: entry };
+  }
+
+  function updateStamp() {
+    var got = currentEntry();
+    var hex = got.entry.hex;
+    if (bench.tamper) {
+      var changed = L.stamped(L.tamperPayload(got.payload));
+      text($('stamp-line'), 'Stamp ' + changed.hex + '  (one penny moved)');
+      text($('stamp-detail'), 'One penny moved on a slip. The stamp changed from ' + hex.slice(0, 14) +
+        '... to ' + changed.hex.slice(0, 14) + '... An honest book catches that. Press again to put the penny back.');
+    } else {
+      text($('stamp-line'), 'Stamp ' + hex);
+      text($('stamp-detail'), 'This stamp belongs to the book right now. The files below carry the same one.');
+    }
+  }
+
+  function syncPatternButtons() {
+    var wrap = $('split-pick');
+    var buttons = wrap.querySelectorAll ? wrap.querySelectorAll('button') : [];
+    for (var i = 0; i < buttons.length; i++) {
+      buttons[i].setAttribute('aria-pressed', buttons[i].getAttribute('data-pattern') === bench.pattern ? 'true' : 'false');
+    }
+  }
+
+  function updatePanDetail() {
+    var rows = L.panRows(readPan('pf', state.panFrom));
+    var key = L.panKeyFor(state.panTo);
+    var found = rows.filter(function (p) { return p.key === key; })[0];
+    var detail = $('pan-detail');
+    if (found) {
+      text(detail, 'Baking in the ' + found.label + ': ' + found.depthText + ', ' + found.areaText + '.');
+    } else {
+      text(detail, 'Your pan sits between the marks. Pick a mark to compare it with a common pan.');
+    }
+    return key;
+  }
+
+  function updateSplitDetail() {
+    var rows = L.splitRows(bench.pattern);
+    var detail = $('split-detail');
+    var row = rows.filter(function (r) { return r.people === bench.size; })[0];
+    if (!row) {
+      var total = rows.reduce(function (s, r) { return s + r.saved; }, 0);
+      text(detail, 'The book saves ' + total + ' handoffs across these ten houses. Pick a column for one.');
+      return;
+    }
+    text(detail, 'A house of ' + row.people + ': the book needs ' + row.exact + ' handoffs and ' +
+      row.piecesExact + ' bills or coins; the plain way needs ' + row.greedy + ' handoffs and ' + row.piecesGreedy + '.');
+  }
+
+  function renderBench() {
+    if (!L) return;
+    var rows = L.benchRows(state.recipeText);
+    $('bench-rows').innerHTML = benchTableRows(rows);
+    var activePan = updatePanDetail();
+    bench.pan = activePan;
+    $('pan-curve').innerHTML = panCurveSvg(L.panRows(readPan('pf', state.panFrom)), activePan);
+    $('split-bars').innerHTML = splitBarsSvg(L.splitRows(bench.pattern), bench.size);
+    updateSplitDetail();
+    updateStamp();
+    syncPatternButtons();
+  }
+
+  function applyBenchRow(key) {
+    var row = L.ROW_BY_KEY[key];
+    if (!row) return;
+    bench.row = key;
+    if (row.kind === 'people') {
+      state.scaleBy = 'people';
+      state.from = row.from;
+      state.to = row.to;
+      $('by-people').checked = true;
+      $('servings-from').value = state.from;
+      $('servings-to').value = state.to;
+      text($('bench-row-note'), 'Using the ' + row.label.toLowerCase() + ', times ' + E.formatMixed(E.servingsFactor(row.from, row.to)) + '.');
+    } else {
+      state.panFrom = wholePan(row.from, DEFAULTS.panFrom);
+      state.panTo = wholePan(row.to, DEFAULTS.panTo);
+      state.scaleBy = 'pan';
+      $('by-pan').checked = true;
+      fillPanFields('pf', state.panFrom);
+      fillPanFields('pt', state.panTo);
+      text($('bench-row-note'), 'Using the pan swap: ' + row.label.toLowerCase() + '.');
+    }
+    save();
+    syncPanFields();
+    renderPan();
+    renderKitchen();
+    renderBench();
+    updateTail();
+  }
+
+  function selectPan(key) {
+    var p = L.PAN_BY_KEY[key];
+    if (!p) return;
+    state.panTo = wholePan(p.pan, DEFAULTS.panTo);
+    fillPanFields('pt', state.panTo);
+    save();
+    syncPanFields();
+    renderPan();
+    renderKitchen();
+    bench.pan = key;
+    renderBench();
+    updateTail();
+    text($('pan-detail'), 'Baking in the ' + p.label + ' now. The pan picture above shows the swap.');
+  }
+
+  function selectSplitSize(n) {
+    bench.size = bench.size === n ? 0 : n;
+    renderBench();
+    updateTail();
+  }
+
+  function selectPattern(key) {
+    bench.pattern = key;
+    renderBench();
+    updateTail();
+  }
+
+  function checkStamp() {
+    var got = currentEntry();
+    var again = L.sha256Hex(L.canonicalize(got.payload));
+    text($('bench-note'), again === got.entry.hex
+      ? 'The stamp on this page matches one the book just worked out again.'
+      : 'The stamp does not match. Something changed the numbers behind its back.');
+  }
+
+  function toggleTamper() {
+    bench.tamper = !bench.tamper;
+    updateStamp();
+    updateTail();
+    if (!bench.tamper) text($('bench-note'), 'The penny is back and the stamp matches again.');
+  }
+
+  function saveFile(name, body) {
+    var note = $('bench-note');
+    try {
+      var blob = new Blob([body], { type: 'text/plain' });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = name;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      text(note, 'Saved ' + name + ' with the same stamp inside.');
+    } catch (err) {
+      text(note, 'This device could not save a file here.');
+    }
+  }
+
+  function exportNumbers() {
+    var got = currentEntry();
+    saveFile('kitchen-checkup-numbers.json', L.exportNumbers(got.payload, got.entry));
+  }
+
+  function exportSheet() {
+    var got = currentEntry();
+    saveFile('kitchen-checkup-sheet.csv', L.exportSheet(got.payload, L.benchRows(state.recipeText), got.entry));
+  }
+
+  function exportNotes() {
+    var got = currentEntry();
+    saveFile('kitchen-checkup-note.md', L.exportNotes(got.payload, L.benchRows(state.recipeText), got.entry));
+  }
+
+  function benchLink() {
+    var note = $('bench-note');
+    return S.pack(state, E).then(function (packed) {
+      var url = window.location.href.split('#')[0] + '#' + packed + '&' + L.encodeTail(bench);
+      var done = function (ok) {
+        text(note, ok ? 'Copied. The link opens this bench as it is now.' : 'The link is ' + url);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+      } else {
+        done(false);
+      }
+    });
+  }
+
+  function ensureEnv() {
+    if (lastEnv) return Promise.resolve(lastEnv);
+    return Promise.all([readFiles(), savedCopy()]).then(function (got) {
+      var files = got[0];
+      var by = {};
+      files.forEach(function (f) { by[f.name] = f.body; });
+      var scripts = {};
+      Object.keys(by).filter(function (n) { return /\.js$/.test(n); }).forEach(function (n) { scripts[n] = by[n]; });
+      lastEnv = {
+        html: by['./index.html'] || '',
+        css: (by['./tokens.css'] || '') + '\n' + (by['./styles.css'] || ''),
+        scripts: scripts,
+        packageJson: by['./package.json'] || '{}',
+        bookFiles: window.BOOK_FILES || [],
+        fetchedOk: files.filter(function (f) { return f.ok; }).length,
+        savedOk: got[1].ok,
+        liveOk: liveColors().result.offenders.length === 0
+      };
+      return lastEnv;
+    });
+  }
+
+  function runSelfChecks() {
+    if (!L) return Promise.resolve();
+    return ensureEnv().then(function (env) {
+      env.recipeText = state.recipeText;
+      env.payload = L.bookPayload(state, bench);
+      var rows = L.selfChecks(env);
+      $('self-list').innerHTML = R.auditRows(rows);
+      var ok = rows.filter(function (r) { return r.ok; }).length;
+      text($('self-count'), ok + ' of ' + rows.length + ' checks pass.');
+      return rows;
+    });
+  }
+
   /* ---------- the check ---------- */
 
   var COLOR_PROPS = [
@@ -407,6 +768,16 @@
       });
       var live = liveColors();
       var saved = got[1];
+      lastEnv = {
+        html: by['./index.html'] || '',
+        css: (by['./tokens.css'] || '') + '\n' + (by['./styles.css'] || ''),
+        scripts: scripts,
+        packageJson: by['./package.json'] || '{}',
+        bookFiles: window.BOOK_FILES || [],
+        fetchedOk: files.filter(function (f) { return f.ok; }).length,
+        savedOk: saved.ok,
+        liveOk: live.result.offenders.length === 0
+      };
       var rows = audit.checks.map(function (c) { return { label: c.label, ok: c.ok, detail: c.detail }; });
       var liveBad = live.result.offenders.length;
       rows[0].ok = rows[0].ok && liveBad === 0;
@@ -430,6 +801,7 @@
       var all = rows.every(function (r) { return r.ok; });
       setStamp(all ? 'yes' : 'no');
       text($('check-note'), all ? 'Checked just now by reading this book\'s own files.' : 'Something needs fixing. See the list.');
+      if (L && $('self-list').children.length > 0) runSelfChecks();
     });
   }
 
@@ -504,7 +876,7 @@
         });
       });
     }, { rootMargin: '-30% 0px -60% 0px' });
-    ['kitchen', 'bills', 'care', 'check'].forEach(function (id) { seen.observe($(id)); });
+    ['kitchen', 'bills', 'care', 'checkup', 'check'].forEach(function (id) { seen.observe($(id)); });
   }
 
   /* ---------- starting up ---------- */
@@ -531,6 +903,7 @@
     renderBills();
     syncCareFields();
     renderCare();
+    renderBench();
   }
 
   function listen() {
@@ -586,15 +959,81 @@
       text($('print-note'), 'Printed on ' + new Date().toLocaleDateString(undefined, { dateStyle: 'long' }) +
         ' from the Two-Crayon Kitchen & Bill Book.');
     });
+    if (L) {
+      $('bench-rows').addEventListener('click', function (event) {
+        var el = event.target.closest ? event.target.closest('[data-bench-row]') : null;
+        if (el) applyBenchRow(el.getAttribute('data-bench-row'));
+      });
+      $('bench-rows').addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        var el = event.target.closest ? event.target.closest('[data-bench-row]') : null;
+        if (el) { event.preventDefault(); applyBenchRow(el.getAttribute('data-bench-row')); }
+      });
+      $('pan-curve').addEventListener('click', function (event) {
+        var el = event.target.closest ? event.target.closest('[data-pan]') : null;
+        if (el) selectPan(el.getAttribute('data-pan'));
+      });
+      $('pan-curve').addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        var el = event.target.closest ? event.target.closest('[data-pan]') : null;
+        if (el) { event.preventDefault(); selectPan(el.getAttribute('data-pan')); }
+      });
+      $('split-bars').addEventListener('click', function (event) {
+        var el = event.target.closest ? event.target.closest('[data-size]') : null;
+        if (el) selectSplitSize(Number(el.getAttribute('data-size')));
+      });
+      $('split-bars').addEventListener('keydown', function (event) {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        var el = event.target.closest ? event.target.closest('[data-size]') : null;
+        if (el) { event.preventDefault(); selectSplitSize(Number(el.getAttribute('data-size'))); }
+      });
+      $('split-pick').addEventListener('click', function (event) {
+        var el = event.target.closest ? event.target.closest('[data-pattern]') : null;
+        if (el) selectPattern(el.getAttribute('data-pattern'));
+      });
+      $('stamp-check').addEventListener('click', checkStamp);
+      $('stamp-tamper').addEventListener('click', toggleTamper);
+      $('save-numbers').addEventListener('click', exportNumbers);
+      $('save-sheet').addEventListener('click', exportSheet);
+      $('save-notes').addEventListener('click', exportNotes);
+      $('bench-link').addEventListener('click', benchLink);
+      $('self-run').addEventListener('click', runSelfChecks);
+    }
     $('check-again').addEventListener('click', runCheck);
     $('copy-link').addEventListener('click', shareLink);
     window.addEventListener('online', function () { runCheck(); });
     window.addEventListener('offline', function () { runCheck(); });
   }
 
+  /* The tail describes how the bench looks. It lands after any shared book,
+     so a link can carry both without one eating the other. */
+  function applyTail(tail) {
+    bench = tail;
+    if (tail.pan !== 'none' && L.PAN_BY_KEY[tail.pan]) {
+      state.panTo = wholePan(L.PAN_BY_KEY[tail.pan].pan, DEFAULTS.panTo);
+    }
+    if (tail.row !== 'none' && L.ROW_BY_KEY[tail.row]) {
+      var row = L.ROW_BY_KEY[tail.row];
+      if (row.kind === 'people') {
+        state.scaleBy = 'people';
+        state.from = row.from;
+        state.to = row.to;
+      } else {
+        state.panFrom = wholePan(row.from, DEFAULTS.panFrom);
+        state.panTo = wholePan(row.to, DEFAULTS.panTo);
+        state.scaleBy = 'pan';
+      }
+    }
+  }
+
   function start() {
     loadSaved();
+    var tail = L ? L.parseTail(window.location.hash) : null;
+    var shareSeg = window.location.hash.replace(/^#/, '').split('&').filter(function (p) {
+      return p.indexOf('checkup=') !== 0;
+    }).join('&');
     var begin = function () {
+      if (tail) applyTail(tail);
       fillBoxes();
       renderAll();
       listen();
@@ -602,8 +1041,8 @@
       registerSavedCopy();
       runCheck();
     };
-    if (window.location.hash.length > 4) {
-      S.unpack(window.location.hash, E).then(function (shared) {
+    if (/^(z1|p1)\./.test(shareSeg)) {
+      S.unpack('#' + shareSeg, E).then(function (shared) {
         if (shared) adopt(shared);
         begin();
       }).catch(function () {
