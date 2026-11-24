@@ -127,6 +127,18 @@ test('the page uses no inline event code and no inline style colors', () => {
   assert.equal(/\bstyle="/.test(html), false);
 });
 
+test('the page ships a restrictive Content-Security-Policy', () => {
+  const m = /<meta\s+http-equiv="Content-Security-Policy"\s+content="([^"]+)"/i.exec(html);
+  assert.ok(m, 'index.html carries a CSP meta');
+  const csp = m[1];
+  assert.ok(/default-src 'none'/.test(csp), 'default-src denies everything by default');
+  assert.ok(/script-src 'self'/.test(csp), 'scripts stay same origin only');
+  assert.ok(!/unsafe-inline|unsafe-eval/.test(csp), 'no inline script or eval escape hatch');
+  assert.ok(/connect-src 'self'/.test(csp), 'the checkup bench may fetch its own files and nothing else');
+  assert.ok(/font-src 'self'/.test(csp) && /manifest-src 'self'/.test(csp), 'fonts and the manifest stay same origin');
+  assert.ok(/object-src 'none'|default-src 'none'/.test(csp), 'plugins denied');
+});
+
 test('the scripts load in the order they need each other', () => {
   const order = [...html.matchAll(/<script src="([^"]+)"><\/script>/g)].map((m) => m[1]);
   assert.deepEqual(order, ['./files.js', './js/engine.js', './share.js', './render.js', './js/book-lab.js', './app.js']);

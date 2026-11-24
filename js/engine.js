@@ -913,11 +913,13 @@
       .replace(/&quot;/g, '"').replace(/&#39;/g, "'");
   }
 
-  /* The words a visitor can read or hear: page text plus labels. */
+  /* The words a visitor can read or hear: page text plus labels. Machine
+     directives like an http-equiv meta are not words a visitor hears. */
   function visibleText(html) {
     var text = String(html)
       .replace(/<!--[\s\S]*?-->/g, ' ')
-      .replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, ' ');
+      .replace(/<(script|style|svg)\b[\s\S]*?<\/\1>/gi, ' ')
+      .replace(/<meta\b[^>]*\bhttp-equiv\b[^>]*>/gi, ' ');
     var labels = [];
     var attr = /\b(?:aria-label|title|alt|placeholder|content)\s*=\s*"([^"]*)"/gi;
     var m;
