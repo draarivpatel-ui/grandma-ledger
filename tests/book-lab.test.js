@@ -782,7 +782,7 @@ test('the bench fills in on a page that has the lab', async () => {
   const rows = page.get('bench-rows').innerHTML;
   assert.equal((rows.match(/data-bench-row="/g) || []).length, 6);
   assert.match(rows, /Half batch, serves two/);
-  assert.match(page.get('pan-curve').innerHTML, /<svg class="chart"/);
+  assert.match(page.get('pan-curve').innerHTML, /<svg class="chart(?: chart-bench)?"/);
   assert.equal((page.get('pan-curve').innerHTML.match(/data-pan="/g) || []).length, 7);
   assert.equal((page.get('split-bars').innerHTML.match(/data-size="/g) || []).length, 10);
   assert.equal((page.get('split-bars').innerHTML.match(/chart-bar-alt/g) || []).length, 10);

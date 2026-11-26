@@ -221,6 +221,12 @@ test('the check, the stamp and the cursor stay in the two crayons', () => {
   assert.match(styles, /scrollbar-color: var\(--ink\) var\(--paper\)/);
   assert.match(styles, /:focus-visible/);
   assert.match(styles, /prefers-reduced-motion: reduce/);
+  assert.match(styles, /::placeholder \{ color: var\(--ink-75\)/);
+  assert.match(styles, /\.row-pick \{[\s\S]*min-height: var\(--target\)/);
+  assert.match(styles, /\.row-pick \{[\s\S]*border: var\(--rule-thin\) solid var\(--ink\)/);
+  assert.match(styles, /\.chart-hit \{ fill: transparent; stroke: var\(--ink-75\)/);
+  assert.match(styles, /\.chart-bench \{ min-width: 44rem; \}/);
+  assert.ok(appSource.includes('r="22"></circle>'));
 });
 
 /* ---------- works without internet ---------- */

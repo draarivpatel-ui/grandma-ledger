@@ -407,13 +407,13 @@
       var y = Y(p.depthNum).toFixed(1);
       var picked = pickedKey === p.key ? ' data-picked="yes"' : '';
       return '<g class="chart-pick" tabindex="0" role="button" data-pan="' + esc(p.key) + '"' + picked +
-        ' aria-label="Use the ' + esc(p.label) + ' pan"><circle class="chart-hit" cx="' + x + '" cy="' + y + '" r="20"></circle>' +
+        ' aria-label="Use the ' + esc(p.label) + ' pan"><circle class="chart-hit" cx="' + x + '" cy="' + y + '" r="22"></circle>' +
         '<circle class="chart-dot" cx="' + x + '" cy="' + y + '" r="7"></circle></g>';
     }).join('');
     var label = 'Line of pan room against batter depth for the same batch. ' + rows.map(function (p) {
       return p.label + ' gives ' + p.depthText;
     }).join('. ') + '.';
-    return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + '">' +
+    return '<svg class="chart chart-bench" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + '">' +
       '<line class="chart-axis" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + (H - bottom) + '"></line>' +
       '<line class="chart-axis" x1="' + left + '" y1="' + (H - bottom) + '" x2="' + (W - right) + '" y2="' + (H - bottom) + '"></line>' +
       '<line class="chart-grid" x1="' + left + '" y1="' + y1.toFixed(1) + '" x2="' + (W - right) + '" y2="' + y1.toFixed(1) + '"></line>' +
@@ -457,7 +457,7 @@
     });
     var label = 'Bars for houses of 3 to 12 people. Solid is the book fewest, hatched is the plain greedy way. ' +
       rows.map(function (r) { return r.people + ' people: ' + r.exact + ' against ' + r.greedy; }).join('. ') + '.';
-    return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + '">' +
+    return '<svg class="chart chart-bench" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="' + esc(label) + '">' +
       '<defs><pattern id="bench-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">' +
       '<line x1="0" y1="0" x2="0" y2="6" class="chart-bar-fill"></line></pattern></defs>' +
       '<line class="chart-axis" x1="' + left + '" y1="' + top + '" x2="' + left + '" y2="' + base + '"></line>' +

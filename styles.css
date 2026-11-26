@@ -60,7 +60,7 @@ input, button, select, textarea, option { color: var(--ink); }
 option { background-color: var(--paper); }
 
 ::selection { background-color: var(--ink); color: var(--paper); }
-::placeholder { color: var(--ink-60); opacity: 1; }
+::placeholder { color: var(--ink-75); opacity: 1; }
 
 h1, h2, h3, h4 {
   margin: 0;
@@ -428,7 +428,7 @@ input[type="radio"]:checked:hover, input[type="checkbox"]:checked:hover { backgr
 .pan-head p { margin-top: var(--space-xs); }
 .pan-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md); }
 .pan-set .field:last-child, .pan-set .field-row:last-child .field { margin-bottom: 0; }
-.pan-figure { margin: var(--space-lg) auto 0; max-width: 34rem; padding: var(--space-sm); background-color: var(--paper); border: var(--rule) solid var(--ink); }
+.pan-figure { margin: var(--space-lg) auto 0; max-width: 34rem; padding: var(--space-sm); background-color: var(--paper); border: var(--rule) solid var(--ink); overflow-x: auto; }
 .pan-advice { max-width: var(--measure); margin: var(--space-md) auto 0; display: grid; gap: var(--space-xs); justify-items: start; padding: var(--space-md); background-color: var(--paper); border: var(--rule) solid var(--ink); }
 .pan-advice p:first-child { font-weight: 650; }
 [data-shape="round"][hidden], [data-shape="rect"][hidden] { display: none; }
@@ -541,11 +541,13 @@ table, thead, tbody, tfoot, tr { border-color: currentColor; }
 .bench-table tbody tr:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .bench-table td:nth-child(2), .bench-table td:nth-child(5) { font-family: var(--font-mono); font-weight: 700; }
 .row-pick {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
-  padding: 0;
-  border: 0;
-  background: none;
+  min-height: var(--target);
+  padding: var(--space-3xs) var(--space-2xs);
+  border: var(--rule-thin) solid var(--ink);
+  background: var(--paper);
   color: inherit;
   font: inherit;
   font-weight: 700;
@@ -554,7 +556,7 @@ table, thead, tbody, tfoot, tr { border-color: currentColor; }
 }
 .row-pick:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
 
-.chart-frame { margin-top: var(--space-sm); padding: var(--space-2xs); border: var(--rule) solid var(--ink); background-color: var(--paper); }
+.chart-frame { margin-top: var(--space-sm); padding: var(--space-2xs); border: var(--rule) solid var(--ink); background-color: var(--paper); overflow-x: auto; }
 .chart { display: block; width: 100%; height: auto; }
 .chart text { fill: var(--ink); font-family: var(--font-body); }
 .chart-axis { fill: none; stroke: var(--ink); stroke-width: 2; }
@@ -564,7 +566,7 @@ table, thead, tbody, tfoot, tr { border-color: currentColor; }
 .chart-pick[data-picked="yes"] .chart-dot { fill: var(--ink); }
 .chart-pick { cursor: pointer; outline: none; }
 .chart-pick:focus-visible .chart-dot { stroke-width: 4.5; }
-.chart-hit { fill: transparent; stroke: none; }
+.chart-hit { fill: transparent; stroke: var(--ink-75); stroke-width: 1.5; }
 .chart-label { font-size: 13px; font-weight: 650; }
 .chart-value { font-size: 13px; font-family: var(--font-mono); font-weight: 700; }
 .chart-bar { fill: var(--ink); }
@@ -773,4 +775,9 @@ table, thead, tbody, tfoot, tr { border-color: currentColor; }
   .print-note { display: block; margin-top: var(--space-sm); font-weight: 700; }
   .colophon { padding: var(--space-sm) 0 0; }
   a { text-decoration: none; }
+}
+
+.chart-bench { min-width: 44rem; }
+@media print {
+  .chart-bench { min-width: 0; }
 }
