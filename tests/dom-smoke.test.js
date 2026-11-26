@@ -64,6 +64,7 @@ test('there is exactly one h1 and the headings never skip a level', () => {
 
 test('the page has a skip link and the four landmarks', () => {
   assert.match(html, /<a class="skip[^"]*" href="#kitchen">/);
+  assert.match(html, /<section class="part kitchen" id="kitchen" tabindex="-1" aria-labelledby="kitchen-title">/);
   ['<header', '<nav', '<main', '<footer'].forEach((tag) => assert.ok(html.includes(tag), tag));
   assert.match(html, /<nav[^>]*aria-label="/);
 });

@@ -530,11 +530,12 @@
       }, null, 2) + '\n';
     }
 
-    /* One cell in a sheet file. A cell that could read as a formula gets a
+    /* One cell in a sheet file. A cell that could read as a formula, even
+       after a spreadsheet strips leading blanks or invisible marks, gets a
        leading single quote so it opens as plain text. */
     function csvCell(value) {
       var s = String(value);
-      if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+      if (/^[\s=+\-@\x00-\x1f\x7f-\x9f\u00ad\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufe00-\ufe0f]/.test(s)) s = "'" + s;
       if (/[",\n\r]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
       return s;
     }

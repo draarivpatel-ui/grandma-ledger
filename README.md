@@ -45,7 +45,7 @@ then open http://127.0.0.1:8080/. Open it once while connected so the saved copy
 npm test
 ```
 
-This uses only Node's built-in test runner. There are 496 tests: 92 for the engine, 61 smoke tests for the page, and 343 for the checkup bench (the stamp writer checked against the device's own answers for every message length from 0 to 160 bytes, the careful writer, the bench rows, the link tail, and the wiring). The smoke tests include a small stand-in page that runs `app.js` end to end, because a browser library would break the no libraries rule.
+This uses only Node's built-in test runner. There are 497 tests: 92 for the engine, 61 smoke tests for the page, and 344 for the checkup bench (the stamp writer checked against the device's own answers for every message length from 0 to 160 bytes, the careful writer, the bench rows, the link tail, and the wiring). The smoke tests include a small stand-in page that runs `app.js` end to end, because a browser library would break the no libraries rule.
 
 The Hark planted-defect check mutates `js/engine.js` and expects the tests to catch every change. Run against all 96 possible changes, all 96 are caught.
 

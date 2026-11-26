@@ -463,6 +463,15 @@ test('cells with commas, quotes and new lines are wrapped safely', () => {
   assert.equal(L.csvCell('="a,b"'), '"\'=""a,b"""');
 });
 
+test('a formula hiding behind whitespace or invisible characters opens as plain text', () => {
+  [
+    ' =1+1', '   +2', '\n=3', '\u00a0=4', '\u200b=5', '\x00=6', '\x1f=7', '\x7f=8', '\u202f@there'
+  ].forEach((cell) => {
+    const out = L.csvCell(cell);
+    assert.ok(out[0] === "'" || out.slice(0, 2) === '"\'', JSON.stringify(cell) + ' -> ' + JSON.stringify(out));
+  });
+});
+
 test('a formula hiding inside a name cannot reach the sheet', () => {
   const state = freshState();
   state.people = '=1+1, Alma';
