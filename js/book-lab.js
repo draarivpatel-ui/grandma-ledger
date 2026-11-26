@@ -535,7 +535,7 @@
        leading single quote so it opens as plain text. */
     function csvCell(value) {
       var s = String(value);
-      if (/^[\s=+\-@\x00-\x1f\x7f-\x9f\u00ad\u200b-\u200f\u202a-\u202e\u2060-\u2069\ufe00-\ufe0f]/.test(s)) s = "'" + s;
+      if (/^[\t\r\n]/.test(s) || /^[\p{White_Space}\p{Cc}\p{Cf}\p{M}]*[=+\-@]/u.test(s)) s = "'" + s;
       if (/[",\n\r]/.test(s)) s = '"' + s.replace(/"/g, '""') + '"';
       return s;
     }

@@ -946,3 +946,11 @@ test('the mobile layout cannot push the bench sideways', () => {
   assert.match(styles, /64rem\)[\s\S]*?\.bench-grid/);
   assert.match(styles, /bench-table-wrap \{ overflow-x: auto/);
 });
+
+test('a formula behind any invisible format character opens as plain text', () => {
+  for (const input of ['\u061c=1+1', '\u180e+2', '\u2060@sum', '\ufeff=cmd']) {
+    const escaped = L.csvCell(input);
+    const first = escaped.charAt(0) === '"' ? escaped.charAt(1) : escaped.charAt(0);
+    assert.equal(first, "'", input);
+  }
+});
