@@ -303,7 +303,7 @@ test('package.json lists no libraries of any kind', () => {
   assert.deepEqual(pkg.dependencies, {});
   assert.deepEqual(pkg.devDependencies, {});
   assert.equal(pkg.license, 'MIT');
-  assert.equal(pkg.scripts.test, 'node --test tests/');
+  assert.equal(pkg.scripts.test, 'node --test');
   assert.equal(fs.existsSync(path.join(ROOT, 'node_modules')), false);
   assert.equal(fs.existsSync(path.join(ROOT, 'package-lock.json')), false);
 });
